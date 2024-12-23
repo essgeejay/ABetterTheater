@@ -8,9 +8,10 @@ if (
   show("overlayfull");
 }
 
-if (!navigator.userAgent.includes("Tesla")) {
+if (!isTeslaBrowser()) {
   show("teslaBrowser");
 }
+
 getIPDetails();
 
 const node = document.getElementById("path");
@@ -24,6 +25,18 @@ node.addEventListener("keyup", function (event) {
 
 function goFullScreen() {
   location.href = `https://www.youtube.com/redirect?q=https://${document.location.host}`;
+}
+
+function isTeslaBrowser() {
+  // Check for older Tesla browsers using UA
+  const isTeslaUA = navigator.userAgent.includes("Tesla");
+
+  // Check for newer Tesla browsers using viewport dimensions
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const isTeslaViewport = viewportWidth === 1180 && viewportHeight === 919;
+
+  return isTeslaUA || isTeslaViewport;
 }
 
 function showOverlay() {
