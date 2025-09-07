@@ -1,270 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>ABetterTheater.nz - Full Screen Apps</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="A Better Theater for your Tesla!" />
-    <meta
-      name="keywords"
-      content="ABetterTheater, New Zealand, A Better Theater, Theatre"
-    />
-    <meta name="theme-color" content="#262626" />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:site_name"
-      content="ABetterTheater.nz - Full Screen Apps"
-    />
-    <meta property="og:title" content="ABetterTheater.nz - Full Screen Apps" />
-    <meta
-      property="og:description"
-      content="A Better Theater for your Tesla!"
-    />
-    <meta property="og:url" content="https://abettertheater.nz/" />
-    <meta property="og:image" content="https://abettertheater.nz/img/logo-200.png" />
-    <link rel="shortcut icon" href="img/favicon.ico" />
-    <link rel="canonical" href="https://abettertheater.nz/" />
-    <link rel="stylesheet" href="styles.css?r=12" />
-    <style>
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-      }
-    </style>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-ZM4FBPXRCH"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Theater, safe baseline</title>
+  <style>
+    body{margin:0;background:#000;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:#0b0b0b;border-bottom:1px solid #111}
+    h1{margin:0;font-size:18px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:36px;padding:36px;justify-items:center;align-items:center}
+    .tile{display:flex;flex-direction:column;align-items:center;gap:10px}
+    .tile-link{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#fff}
+    .logo{height:110px;display:flex;align-items:center;justify-content:center}
+    .logo img{max-height:110px;max-width:200px;object-fit:contain}
+    .caption{font-size:18px;font-weight:600;text-align:center}
+    footer{padding:12px 18px;color:#9aa7b6;font-size:14px;text-align:center}
+    .toggle{display:flex;align-items:center;gap:8px;font-size:14px}
+    a.basic{color:#8ab4ff}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Theater</h1>
+    <label class="toggle"><input type="checkbox" id="openDirect"> Open directly</label>
+  </header>
 
-      gtag("config", "G-ZM4FBPXRCH");
-    </script>
-  </head>
-  <body>
-    <p id="teslaBrowser" style="text-align: center; display: none">
-      This website is made for your Tesla browser. Open it on there to get the
-      full experience!
-    </p>
-    <div class="container" id="services">
-      <button onclick="showOverlay()" id="web">
-        <img
-          src="img/web.svg"
-          height="78px"
-          width="100%"
-          alt="World Wide Web"
-          class="logo"
-        />
-      </button>
-    </div>
-    <div class="modal" id="overlay" onClick="closeDialog('overlay')">
-      <input
-        type="text"
-        id="path"
-        value="https://"
-        onClick="window.event.stopPropagation();"
-      />
-    </div>
+  <main id="app">
+    <div id="grid" class="grid" aria-live="polite"></div>
+  </main>
 
-    <div class="footer">
-      <div class="btnGroup">
-        <button onClick="showDialog('aboutModal')">About</button>
-        <button onClick="openEditModal();">Edit</button>
-      </div>
+  <footer id="foot">Tap any tile to open. If this page ever fails, you will still see simple links.</footer>
 
-      <div id="overlayfull" style="display: none; text-align: center">
-        <button class="btnBasic" onClick="goFullScreen();">
-          Go fullscreen
-        </button>
-      </div>
-    </div>
-
-    <div class="shadow" id="shadow">
-      <img src="img/loading.svg" class="loading" />
-    </div>
-
-    <div class="modal" id="editModal">
-      <p>
-        Select what streaming servies you would like to be hidden from your
-        dashboard
-      </p>
-      <br />
-      <div id="serviceItems"></div>
-      <br />
-      <button class="btnDone" onClick="window.location.reload();">Done</button>
-    </div>
-
-    <div class="modal" id="geoModal" onClick="closeDialog('geoModal')">
-      <h1>Oops!</h1>
-      <h3>
-        This service won't work unless you are connected to WiFi. Please connect
-        to your phone's hotspot and try again.
-      </h3>
-      <br />
-      <br />
-      <br />
-      <p>
-        <b>Why???</b><br />We have detected you are using your Tesla's LTE
-        connection. Your Tesla's data connection is actually coming from
-        Australia and this service you are trying to access is geo-locked to New
-        Zealand. Because of this even though you are physically in New Zealand,
-        the website you are trying to access thinks you are in Australia and
-        won't let you stream. To get around this you will need to connect your
-        car to WiFi and then this service will work. Try tethering to your
-        phone's hotspot.
-      </p>
-      <br />
-    </div>
-
-    <div class="modal" id="aboutModal" onClick="closeDialog('aboutModal')">
-      <h1>About</h1>
-      <h3>
-        Introducing ABetterTheater: Your gateway to an enhanced Tesla media
-        experience, providing seamless access to all your favorite streaming
-        services. With a focus on simplifying the process of accessing
-        fullscreen media, ABetterTheater empowers you through an elegantly
-        designed "Go Fullscreen" button, ensuring quick engagement and an
-        immersive entertainment experience during your parked moments.
-      </h3>
-      <p>
-        Found an issue or bug?
-        <a href="https://github.com/jLynx/ABetterTheater/issues"
-          >Tap here to report an issue</a
-        >
-      </p>
-      <p>
-        This wesbite is fully open source:
-        <a href="https://github.com/jLynx/ABetterTheater"
-          >https://github.com/jLynx/ABetterTheater</a
-        >.
-      </p>
-      <p>Made with ❤️ by <a href="https://jlynx.net">jLynx.net</a>.</p>
-      <br />
-    </div>
-
-    <script>
-      const baseServices = [
-        { url: "https://app.plex.tv", image: "plex", name: "Plex", geo: false },
-        {
-          url: "https://www.hulu.com",
-          image: "hulu",
-          name: "Hulu",
-          geo: false,
-        },
-        {
-          url: "https://www.primevideo.com",
-          image: "prime",
-          name: "Prime Video",
-          geo: false,
-        },
-        {
-          url: "https://netflix.com",
-          image: "netflix",
-          name: "Netflix",
-          geo: false,
-        },
-        {
-          url: "https://www.disneyplus.com",
-          image: "disneyplus",
-          name: "Disney Plus",
-          geo: false,
-        },
-        {
-          url: "https://www.youtube.com",
-          image: "youtube",
-          name: "YouTube",
-          geo: false,
-        },
-        {
-          url: "https://www.twitch.tv",
-          image: "twitch",
-          name: "Twitch",
-          geo: false,
-        },
-        {
-          url: "https://www.neontv.co.nz",
-          image: "neon",
-          name: "NEON",
-          geo: false,
-        },
-        {
-          url: "https://www.tvnz.co.nz",
-          image: "tvnz",
-          name: "TV NZ",
-          geo: true,
-        },
-        {
-          url: "https://www.sparksport.co.nz",
-          image: "sparksport",
-          name: "Spark Sport",
-          geo: true,
-        },
-        {
-          url: "https://www.skygo.co.nz",
-          image: "skygo",
-          name: "Sky Go",
-          geo: true,
-        },
-        {
-          url: "https://www.skysportnow.co.nz",
-          image: "skysportnow",
-          name: "Sky Sport Now",
-          geo: true,
-        },
-        {
-          url: "https://www.threenow.co.nz",
-          image: "threenow",
-          name: "Three now",
-          geo: true,
-        },
-        {
-          url: "https://www.crunchyroll.com",
-          image: "crunchyroll",
-          name: "Crunchyroll",
-          geo: false,
-        },
-        {
-          url: "https://www.funimation.com",
-          image: "funimation",
-          name: "Funimation",
-          geo: false,
-        },
-        {
-          url: "https://music.youtube.com",
-          image: "youtubemusic",
-          name: "YouTube Music",
-          geo: false,
-        },
-        {
-          url: "https://tv.apple.com/",
-          image: "appletvplus",
-          name: "Apple TV +",
-          geo: false,
-        },
+  <script>
+    (function(){
+      const OPEN_KEY = "abt_open_mode_v1"; // "direct" or "youtube"
+      const sites = [
+        { id:"prime",   name:"Prime Video", url:"https://www.primevideo.com", logo:"https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video.png" },
+        { id:"netflix", name:"Netflix",     url:"https://www.netflix.com",    logo:"https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" },
+        { id:"disney",  name:"Disney+",     url:"https://www.disneyplus.com", logo:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" },
+        { id:"youtube", name:"YouTube",     url:"https://www.youtube.com",    logo:"https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" }
       ];
 
-      var services = baseServices;
-      if (localStorage.getItem("hidden")) {
-        var hiddenItems = JSON.parse(localStorage.getItem("hidden"));
-        services = baseServices.filter(
-          (x) => !hiddenItems.find((h) => h === x.image)
-        );
+      function getMode(){ try{ return localStorage.getItem(OPEN_KEY) || "youtube"; }catch{ return "youtube"; } }
+      function setMode(m){ try{ localStorage.setItem(OPEN_KEY,m); }catch{} }
+      function yt(u){ return "https://www.youtube.com/redirect?q="+encodeURIComponent(u); }
+
+      function mountGrid(){
+        const grid = document.getElementById("grid");
+        grid.innerHTML = "";
+        for(const s of sites){
+          const tile = document.createElement("div"); tile.className = "tile";
+          const a = document.createElement("a"); a.className = "tile-link"; a.href = s.url; a.dataset.url = s.url;
+          const logo = document.createElement("div"); logo.className = "logo";
+          const img = new Image(); img.src = s.logo; img.alt = s.name; logo.appendChild(img);
+          const cap = document.createElement("div"); cap.className = "caption"; cap.textContent = s.name;
+          a.appendChild(logo); a.appendChild(cap); tile.appendChild(a); grid.appendChild(tile);
+        }
       }
 
-      for (const obj of services.reverse()) {
-        document
-          .getElementById("services")
-          .insertAdjacentHTML(
-            "afterbegin",
-            `<button onClick="loading('${obj["url"]}', ${obj["geo"]})"><img src="img/${obj["image"]}.svg" alt="${obj["image"]}" width="100%" height="100%" class="logo" /></button>`
-          );
+      function bindClicks(){
+        const grid = document.getElementById("grid");
+        grid.addEventListener("click", (e) => {
+          const a = e.target.closest("a.tile-link"); if(!a) return; e.preventDefault();
+          const url = a.dataset.url; const mode = getMode();
+          if(mode === "direct"){ window.location.assign(url); return; }
+          const y = yt(url); window.location.assign(y);
+          setTimeout(()=>{ if(location.hostname.includes("youtube.com")) window.location.assign(url); }, 1800);
+        });
       }
-    </script>
 
-    <script type="text/javascript" src="js.js?r=12"></script>
-  </body>
+      function wireToggle(){
+        const cb = document.getElementById("openDirect");
+        cb.checked = getMode() === "direct";
+        cb.onchange = () => setMode(cb.checked ? "direct" : "youtube");
+      }
+
+      function safeStart(){
+        try{
+          wireToggle();
+          mountGrid();
+          bindClicks();
+        }catch(err){
+          // crash guard: show basic anchors so the page is never blank
+          const grid = document.getElementById("grid");
+          grid.innerHTML = sites.map(s=>`<p><a class="basic" href="${s.url}">${s.name}</a></p>`).join("");
+          const foot = document.getElementById("foot");
+          foot.textContent = "Basic links rendered due to a script error. Navigation still works.";
+          console.error(err);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", safeStart);
+      // also run immediately in case this file is injected late
+      safeStart();
+    })();
+  </script>
+</body>
 </html>
